@@ -8,13 +8,5 @@ postRouter.post(
   "/create-post",
   tryCatchHandler(postController.createPostController)
 );
-postRouter.get(
-  "/view-posts/:userId",
-  tryCatchHandler(postController.getPostsController)
-);
-postRouter.patch(
-  "/update-post/:postId",
-  tryCatchHandler(postController.editPostController)
-);
 
 export default postRouter;
