@@ -9,7 +9,7 @@ postRouter.post(
   tryCatchHandler(postController.createPostController)
 );
 postRouter.get(
-  "/view-posts",
+  "/view-posts/:userId",
   tryCatchHandler(postController.getPostsController)
 );
 postRouter.patch(
