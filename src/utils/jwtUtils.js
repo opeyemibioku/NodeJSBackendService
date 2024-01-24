@@ -26,3 +26,13 @@ export const generateJWT = (user) => {
     throw error;
   }
 };
+
+export const verifyJWT = (token) => {
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    return decodedToken;
+  } catch (error) {
+    console.error("Error generating token:", error);
+    throw error;
+  }
+};

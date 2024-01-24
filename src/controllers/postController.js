@@ -1,15 +1,20 @@
-// controllers/postController.js
-
 import { Post } from "../models/postModel.js";
 import { User } from "../models/authModel.js";
+import { verifyJWT } from "../utils/jwtUtils.js";
 import { BadUserRequestError, NotFoundError } from "../error/error.js";
 
 const postController = {
   createPostController: async (req, res) => {
     try {
+      // Verify the token
+      const decodedToken = verifyToken(req.headers.authorization);
+
+      // Assuming your token includes the user ID
+      const userIdFromToken = decodedToken._id;
+
       const { title, content } = req.body;
 
-      const user = await User.findById(req.user.id); // Assuming you store user information in the request after authentication
+      const user = await User.findById(userIdFromToken);
 
       if (!user) {
         throw new NotFoundError("User not found");
@@ -27,15 +32,25 @@ const postController = {
       res.status(201).json({ post: newPost });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Internal Server Error" });
+      handlePostError(res, error);
     }
   },
 
   getPostsController: async (req, res) => {
     try {
+      // Verify the token
+      const decodedToken = verifyToken(req.headers.authorization);
+
+      // Assuming your token includes the user ID
+      const userIdFromToken = decodedToken.id;
+
       const { userId } = req.params;
 
-      const user = await User.findById(userId).populate("posts");
+      if (userId !== userIdFromToken) {
+        throw new UnauthorizedError("Unauthorized");
+      }
+
+      const user = await User.findById(userIdFromToken).populate("posts");
 
       if (!user) {
         throw new NotFoundError("User not found");
@@ -44,12 +59,18 @@ const postController = {
       res.json({ posts: user.posts });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Internal Server Error" });
+      handlePostError(res, error);
     }
   },
 
   editPostController: async (req, res) => {
     try {
+      // Verify the token
+      const decodedToken = verifyToken(req.headers.authorization);
+
+      // Assuming your token includes the user ID
+      const userIdFromToken = decodedToken.id;
+
       const { postId } = req.params;
       const { title, content } = req.body;
 
@@ -57,6 +78,11 @@ const postController = {
 
       if (!post) {
         throw new NotFoundError("Post not found");
+      }
+
+      // Ensure that the user editing the post is the post's author
+      if (post.author.toString() !== userIdFromToken) {
+        throw new UnauthorizedError("Unauthorized");
       }
 
       post.title = title;
@@ -67,7 +93,7 @@ const postController = {
       res.json({ post });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Internal Server Error" });
+      handlePostError(res, error);
     }
   },
 };
