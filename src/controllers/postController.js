@@ -39,9 +39,7 @@ const postController = {
       user.posts.push(newPost);
       await user.save();
 
-      const newToken = generateJWT(user);
-
-      res.status(201).json({ post: newPost, token: newToken });
+      res.status(201).json({ post: newPost });
     } catch (error) {
       console.error(error);
       throw error;
@@ -63,10 +61,10 @@ const postController = {
       const { userId } = req.params;
 
       if (userId !== userIdFromToken) {
-        throw new UnauthorizedError("Unauthorized");
+        throw new Error("Unauthorized");
       }
 
-      const user = await User.findById(userIdFromToken).populate("posts");
+      const user = await User.findById(userId).populate("posts");
 
       if (!user) {
         throw new NotFoundError("User not found");
