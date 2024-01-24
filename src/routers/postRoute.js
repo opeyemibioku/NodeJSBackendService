@@ -13,7 +13,7 @@ postRouter.get(
   tryCatchHandler(postController.getPostsController)
 );
 postRouter.patch(
-  "/update-post",
+  "/update-post/:postId",
   tryCatchHandler(postController.editPostController)
 );
 
