@@ -5,7 +5,11 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { verifyJWT } from "../utils/jwtUtils.js";
 import { generateJWT } from "../utils/jwtUtils.js";
-import { BadUserRequestError, NotFoundError } from "../error/error.js";
+import {
+  BadUserRequestError,
+  NotFoundError,
+  UnAuthorizedError,
+} from "../error/error.js";
 
 dotenv.config();
 
@@ -15,7 +19,7 @@ const postController = {
       // Verify the token directly within the endpoint
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        throw new Error();
+        throw new UnAuthorizedError("Invalid token format");
       }
 
       const token = authHeader.split(" ")[1];
@@ -45,32 +49,36 @@ const postController = {
       throw error;
     }
   },
-  getPostsController: async (req, res) => {
+  createPostController: async (req, res) => {
     try {
       // Verify the token directly within the endpoint
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        throw new UnauthorizedError("Invalid token format");
+        throw new UnAuthorizedError("Invalid token format");
       }
 
       const token = authHeader.split(" ")[1];
       const decodedToken = jwt.verify(token, config.jwt_secret_key);
 
       const userIdFromToken = decodedToken._id;
+      const { title, content } = req.body;
 
-      const { userId } = req.params;
-
-      if (userId !== userIdFromToken) {
-        throw new Error("Unauthorized");
-      }
-
-      const user = await User.findById(userId).populate("posts");
+      const user = await User.findById(userIdFromToken);
 
       if (!user) {
         throw new NotFoundError("User not found");
       }
 
-      res.json({ posts: user.posts });
+      const newPost = await Post.create({
+        title,
+        content,
+        author: user._id,
+      });
+
+      user.posts.push(newPost);
+      await user.save();
+
+      res.status(201).json({ post: newPost });
     } catch (error) {
       console.error(error);
       throw error;
@@ -81,7 +89,7 @@ const postController = {
       // Verify the token directly within the endpoint
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        throw new UnauthorizedError("Invalid token format");
+        throw new UnAuthorizedError("Invalid token format");
       }
 
       const token = authHeader.split(" ")[1];

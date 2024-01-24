@@ -14,12 +14,4 @@ const globalErrorHandler = (err, req, res, next) => {
   });
 };
 
-export class BadUserRequestError extends Error {
-  constructor(message) {
-    super(message);
-    this.status = 400;
-    this.errorType = "BadUserRequestError";
-  }
-}
-
 export default globalErrorHandler;
