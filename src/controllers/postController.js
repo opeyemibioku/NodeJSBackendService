@@ -1,8 +1,12 @@
 import { Post } from "../models/postModel.js";
 import { User } from "../models/authModel.js";
+import config from "../config/index.js";
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { verifyJWT } from "../utils/jwtUtils.js";
 import { BadUserRequestError, NotFoundError } from "../error/error.js";
+
+dotenv.config();
 
 // const postController = {
 //   createPostController: async (req, res) => {
