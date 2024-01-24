@@ -8,9 +8,11 @@ const postController = {
     try {
       // Verify the token
       const decodedToken = verifyJWT(req.headers.authorization);
+      console.log("Request Headers:", req.headers);
 
       // Assuming your token includes the user ID
-      const userIdFromToken = decodedToken._id;
+      const userIdFromToken = decodedToken.id;
+      console.log("Request Headers:", req.headers);
 
       const { title, content } = req.body;
 
