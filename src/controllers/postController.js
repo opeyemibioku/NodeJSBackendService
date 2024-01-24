@@ -49,7 +49,7 @@ const postController = {
       throw error;
     }
   },
-  createPostController: async (req, res) => {
+  getPostsController: async (req, res) => {
     try {
       // Verify the token directly within the endpoint
       const authHeader = req.headers.authorization;
@@ -58,27 +58,23 @@ const postController = {
       }
 
       const token = authHeader.split(" ")[1];
-      const decodedToken = jwt.verify(token, config.jwt_secret_key);
+      const decodedToken = verifyJWT(token);
 
       const userIdFromToken = decodedToken._id;
-      const { title, content } = req.body;
 
-      const user = await User.findById(userIdFromToken);
+      const { userId } = req.params;
+
+      if (userId !== userIdFromToken) {
+        throw new UnAuthorizedError("Unauthorized");
+      }
+
+      const user = await User.findById(userId).populate("posts");
 
       if (!user) {
         throw new NotFoundError("User not found");
       }
 
-      const newPost = await Post.create({
-        title,
-        content,
-        author: user._id,
-      });
-
-      user.posts.push(newPost);
-      await user.save();
-
-      res.status(201).json({ post: newPost });
+      res.json({ posts: user.posts });
     } catch (error) {
       console.error(error);
       throw error;
