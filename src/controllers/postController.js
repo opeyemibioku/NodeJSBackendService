@@ -7,7 +7,7 @@ const postController = {
   createPostController: async (req, res) => {
     try {
       // Verify the token
-      const decodedToken = verifyToken(req.headers.authorization);
+      const decodedToken = verifyJWT(req.headers.authorization);
 
       // Assuming your token includes the user ID
       const userIdFromToken = decodedToken._id;
@@ -39,7 +39,7 @@ const postController = {
   getPostsController: async (req, res) => {
     try {
       // Verify the token
-      const decodedToken = verifyToken(req.headers.authorization);
+      const decodedToken = verifyJWT(req.headers.authorization);
 
       // Assuming your token includes the user ID
       const userIdFromToken = decodedToken.id;
@@ -67,7 +67,7 @@ const postController = {
   editPostController: async (req, res) => {
     try {
       // Verify the token
-      const decodedToken = verifyToken(req.headers.authorization);
+      const decodedToken = verifyJWT(req.headers.authorization);
 
       // Assuming your token includes the user ID
       const userIdFromToken = decodedToken.id;

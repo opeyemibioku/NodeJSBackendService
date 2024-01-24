@@ -29,7 +29,7 @@ export const generateJWT = (user) => {
 
 export const verifyJWT = (token) => {
   try {
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedToken = jwt.verify(token, config.jwt_secret_key);
     return decodedToken;
   } catch (error) {
     console.error("Error generating token:", error);
