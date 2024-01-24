@@ -1,5 +1,6 @@
 import { Post } from "../models/postModel.js";
 import { User } from "../models/authModel.js";
+import jwt from "jsonwebtoken";
 import { verifyJWT } from "../utils/jwtUtils.js";
 import { BadUserRequestError, NotFoundError } from "../error/error.js";
 
@@ -44,7 +45,7 @@ const postController = {
       // Verify the token directly within the endpoint
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        throw new error();
+        throw new Error();
       }
 
       const token = authHeader.split(" ")[1];
