@@ -56,7 +56,7 @@ const postController = {
       }
 
       const token = authHeader.split(" ")[1];
-      const decodedToken = verifyJWT(token);
+      const decodedToken = jwt.verify(token, config.jwt_secret_key);
 
       const userIdFromToken = decodedToken._id;
 
@@ -87,7 +87,7 @@ const postController = {
       }
 
       const token = authHeader.split(" ")[1];
-      const decodedToken = verifyJWT(token);
+      const decodedToken = jwt.verify(token, config.jwt_secret_key);
 
       const userIdFromToken = decodedToken._id;
 
