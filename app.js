@@ -4,6 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import globalErrorHandler from "./src/utils/errorHandler.js";
 import authRouter from "./src/routers/authRoute.js";
+import postRouter from "./src/routers/postRoute.js";
 import config from "./src/config/index.js";
 import dotenv from "dotenv";
 
@@ -25,6 +26,7 @@ app.use(cors());
 
 // Routes
 app.use("/", authRouter);
+app.use("/", postRouter);
 
 app.use(
   cors({

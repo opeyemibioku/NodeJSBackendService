@@ -10,6 +10,5 @@ authRouter.get(
   "/user-details",
   tryCatchHandler(authController.getUserDetailsController)
 );
-// authRouter.get("/get-user", tryCatchHandler(authController.getUserController));
 
 export default authRouter;

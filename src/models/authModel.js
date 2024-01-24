@@ -22,15 +22,16 @@ const UserSchema = new Schema({
     required: [true, "Please enter a valid password"],
     minlength: [8, "Minimum password length must be 8 characters"],
   },
-  //   isEmailVerified: {
-  //     type: Boolean,
-  //     default: false,
-  //   },
-  //   otp: Number,
   dateAdded: {
     type: Date,
     default: Date.now,
   },
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Post", // Reference to the Post model
+    },
+  ],
 });
 
 const User = mongoose.model("User", UserSchema);

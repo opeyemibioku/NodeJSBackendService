@@ -1,5 +1,5 @@
 import development from "../config/development.js";
-// import production from "../config/production.js";
+import production from "../config/production.js";
 
 const environment = process.env.NODE_ENV;
 
