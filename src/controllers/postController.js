@@ -32,7 +32,7 @@ const postController = {
       res.status(201).json({ post: newPost });
     } catch (error) {
       console.error(error);
-      handlePostError(res, error);
+      throw error;
     }
   },
 
@@ -59,7 +59,8 @@ const postController = {
       res.json({ posts: user.posts });
     } catch (error) {
       console.error(error);
-      handlePostError(res, error);
+
+      throw error;
     }
   },
 
@@ -93,7 +94,7 @@ const postController = {
       res.json({ post });
     } catch (error) {
       console.error(error);
-      handlePostError(res, error);
+      throw error;
     }
   },
 };
